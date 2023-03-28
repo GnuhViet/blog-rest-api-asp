@@ -6,17 +6,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace web_blog.Entities;
 
-[Table("category")]
-public partial class category
+[Table("Category")]
+public partial class Category
 {
     [Key]
-    public int id { get; set; }
+    public int Id { get; set; }
 
     [StringLength(255)]
     [Unicode(false)]
-    public string name { get; set; } = null!;
+    public string Name { get; set; } = null!;
 
     [StringLength(255)]
     [Unicode(false)]
-    public string code { get; set; } = null!;
+    public string Code { get; set; } = null!;
 }

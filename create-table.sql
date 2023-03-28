@@ -1,58 +1,53 @@
-create database web_blog
-use web_blog
+--create database web_blog
+--use web_blog
 
-create table [user]
+create table BlogUser
 (
-    id           int           not null identity primary key,
-    user_name    varchar(255)  not null unique,
-    password     varchar(255)  not null,
-    phone_number varchar(255)  null,
-    full_name    nvarchar(255) not null,
-    email        nvarchar(255) null,
-    avatar       nvarchar(255) null,
-    modified_log varchar(max)  null,
-    level        int
+    Id          nvarchar(255) not null primary key,
+    BlogUserId  int           not null identity unique,
+    FullName    nvarchar(255) not null,
+    Avatar      nvarchar(255) null,
+    ModifiedLog varchar(max)  null,
 );
 
-create table article
+create table Article
 (
-    id                int           not null identity primary key,
-    title             nvarchar(255) not null,
-    thumbnail         varchar(255)  null,
-    short_description varchar(max)  null,
-    content           varchar(max)  not null,
-    create_date       date     null,
-    modified_date     date     null,
-    modified_log      varchar(max)  null,
-    create_by_id      int           not null,
-    constraint FK_user_create_article foreign key (create_by_id) references [user] (id)
+    Id                 int           not null identity primary key,
+    Title              nvarchar(255) not null,
+    Thumbnail          varchar(255)  null,
+    ShortDescription   varchar(max)  null,
+    Content            varchar(max)  not null,
+    CreateDate         date          null,
+    ModifiedDate       date          null,
+    ModifiedLog        varchar(max)  null,
+    CreateByBlogUserId int           not null,
+    constraint FK_user_create_article foreign key (CreateByBlogUserId) references BlogUser (BlogUserId)
 );
 
-create table category
+create table Category
 (
-    id   int identity primary key,
-    name varchar(255) not null,
-    code varchar(255) not null
+    Id   int identity primary key,
+    Name varchar(255) not null,
+    Code varchar(255) not null
 );
 
-create table article_category
+create table ArticleCategory
 (
-    article_id  int not null,
-    category_id int not null,
-    constraint FK_article_category_article foreign key (article_id) references article (id),
-    constraint FK_article_category_category foreign key (category_id) references category (id)
+    ArticleId  int not null,
+    CategoryId int not null,
+    constraint FK_article_category_article foreign key (ArticleId) references Article (id),
+    constraint FK_article_category_category foreign key (CategoryId) references Category (id)
 );
 
-create table comments
+create table Comments
 (
-    id            bigint identity primary key,
-    content       varchar(max) not null,
-    create_date   date    null,
-    modified_date date    null,
-    create_by_id  varchar(255) null,
-    modified_log  varchar(max) null,
-    user_id       int          not null,
-    article_id    int          not null,
-    constraint FK_comments_user foreign key (user_id) references [user] (id),
-    constraint FK_comments_article foreign key (article_id) references article (id)
+    Id                 bigint identity primary key,
+    Content            varchar(max) not null,
+    CreateDate         date         null,
+    ModifiedDate       date         null,
+    ModifiedLog        varchar(max) null,
+    CreateByBlogUserId int          not null,
+    ArticleId          int          not null,
+    constraint FK_comments_user foreign key (CreateByBlogUserId) references BlogUser (BlogUserId),
+    constraint FK_comments_article foreign key (ArticleId) references Article (id)
 );
