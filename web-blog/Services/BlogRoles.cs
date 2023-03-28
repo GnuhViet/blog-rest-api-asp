@@ -1,4 +1,4 @@
-﻿namespace web_blog.Repositories;
+﻿namespace web_blog.Services;
 
 public class BlogRoles
 {

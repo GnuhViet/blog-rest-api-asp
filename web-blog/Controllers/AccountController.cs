@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using web_blog.Models;
-using web_blog.Repositories;
+using web_blog.Services;
 
 namespace web_blog.Controllers;
 
@@ -10,18 +10,18 @@ namespace web_blog.Controllers;
 [ApiController]
 public class AccountController : ControllerBase
 {
-    private IAccountRepository _accountRepository;
+    private IAccountService _accountService;
     
 
-    public AccountController(IAccountRepository accountRepository, RoleManager<IdentityRole> roleManager)
+    public AccountController(IAccountService accountService, RoleManager<IdentityRole> roleManager)
     {
-        _accountRepository = accountRepository;
+        _accountService = accountService;
     }
 
     [HttpPost("SignUp")]
     public async Task<IActionResult> SignUp(SignUpModel signUpModel)
     {
-        var result = await _accountRepository.SignUpAsync(signUpModel);
+        var result = await _accountService.SignUpAsync(signUpModel);
 
         if (result.Succeeded)
         {
@@ -34,14 +34,14 @@ public class AccountController : ControllerBase
     [HttpPost("SignIn")]
     public async Task<IActionResult> SignIn(SignInModel signInModel)
     {
-        var result = await _accountRepository.SignInAsync(signInModel);
+        var result = await _accountService.SignInAsync(signInModel);
 
         if (!result.Succeeded)
         {
             return Unauthorized("User name or password is invalid");
         }
 
-        var token = await _accountRepository.GetJwtToken(signInModel);
+        var token = await _accountService.GetJwtToken(signInModel);
         
         return Ok(new
         {

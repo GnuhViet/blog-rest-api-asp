@@ -7,16 +7,16 @@ using web_blog.Entities;
 using web_blog.Models;
 using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
 
-namespace web_blog.Repositories;
+namespace web_blog.Services;
 
-public class AccountRepository : IAccountRepository
+public class AccountService : IAccountService
 {
     private readonly UserManager<BlogUser> _userManager;
     private readonly SignInManager<BlogUser> _signInManager;
     private RoleManager<IdentityRole> _roleManager;
     private readonly IConfiguration _configuration;
 
-    public AccountRepository(UserManager<BlogUser> userManager, SignInManager<BlogUser> signInManager,RoleManager<IdentityRole> roleManager, IConfiguration configuration)
+    public AccountService(UserManager<BlogUser> userManager, SignInManager<BlogUser> signInManager,RoleManager<IdentityRole> roleManager, IConfiguration configuration)
     {
         _userManager = userManager;
         _signInManager = signInManager;

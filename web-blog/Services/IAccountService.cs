@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Identity;
 using web_blog.Models;
 
-namespace web_blog.Repositories;
+namespace web_blog.Services;
 
-public interface IAccountRepository
+public interface IAccountService
 {
     public Task<IdentityResult> SignUpAsync(SignUpModel model);
     public Task<SignInResult> SignInAsync(SignInModel model);
