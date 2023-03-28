@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using web_blog.Entities;
@@ -34,6 +35,7 @@ public partial class BlogDbContext : IdentityDbContext<BlogUser>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+        this.SeedRoles(modelBuilder);
         
         modelBuilder.Entity<Article>(entity =>
         {
@@ -88,4 +90,12 @@ public partial class BlogDbContext : IdentityDbContext<BlogUser>
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
+    private void SeedRoles(ModelBuilder builder)
+    {
+        builder.Entity<IdentityRole>().HasData(
+            new IdentityRole() { Name = "Admin", ConcurrencyStamp = "1", NormalizedName = "Admin" },
+            new IdentityRole() { Name = "User", ConcurrencyStamp = "2", NormalizedName = "User" }
+        );
+    }
 }

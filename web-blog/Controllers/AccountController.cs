@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using web_blog.Models;
 using web_blog.Repositories;
 
@@ -9,8 +11,9 @@ namespace web_blog.Controllers;
 public class AccountController : ControllerBase
 {
     private IAccountRepository _accountRepository;
+    
 
-    public AccountController(IAccountRepository accountRepository)
+    public AccountController(IAccountRepository accountRepository, RoleManager<IdentityRole> roleManager)
     {
         _accountRepository = accountRepository;
     }
@@ -33,12 +36,18 @@ public class AccountController : ControllerBase
     {
         var result = await _accountRepository.SignInAsync(signInModel);
 
-        if (string.IsNullOrEmpty(result))
+        if (!result.Succeeded)
         {
-            return Unauthorized();
+            return Unauthorized("User name or password is invalid");
         }
 
-        return Ok(result);
+        var token = await _accountRepository.GetJwtToken(signInModel);
+        
+        return Ok(new
+        {
+            token = new JwtSecurityTokenHandler().WriteToken(token),
+            expiration = token.ValidTo
+        });
     }
 
 }
