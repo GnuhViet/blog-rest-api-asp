@@ -29,7 +29,7 @@ public class AccountService : IAccountService
         var user = new BlogUser
         {
             FullName = model.FullName,
-            UserName = model.UserName,
+            UserName = model.Username,
             Email = model.Email
         };
         
@@ -47,18 +47,18 @@ public class AccountService : IAccountService
 
     public async Task<SignInResult> SignInAsync(SignInModel model)
     {
-        return await _signInManager.PasswordSignInAsync(model.UserName, model.Password, false, false);
+        return await _signInManager.PasswordSignInAsync(model.Username, model.Password, false, false);
     }
 
     public async Task<JwtSecurityToken> GetJwtToken(SignInModel model)
     {
         var authClaims = new List<Claim>()
         {
-            new Claim(ClaimTypes.Name, model.UserName),
+            new Claim(ClaimTypes.Name, model.Username),
             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 
-        var user = await _userManager.FindByNameAsync(model.UserName);
+        var user = await _userManager.FindByNameAsync(model.Username);
         var userRoles = await _userManager.GetRolesAsync(user);
 
         foreach (var role in userRoles)
