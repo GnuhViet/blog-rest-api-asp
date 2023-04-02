@@ -8,5 +8,5 @@ public interface IAccountService
 {
     public Task<IdentityResult> SignUpAsync(SignUpModel model);
     public Task<SignInResult> SignInAsync(SignInModel model);
-    public Task<JwtSecurityToken> GetJwtToken(SignInModel model);
+    public Task<JwtSecurityToken> GenerateJwtToken(SignInModel model);
 }

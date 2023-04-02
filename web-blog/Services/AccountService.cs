@@ -23,7 +23,7 @@ public class AccountService : IAccountService
         _roleManager = roleManager;
         _configuration = configuration;
     }
-
+    
     public async Task<IdentityResult> SignUpAsync(SignUpModel model)
     {
         var user = new BlogUser
@@ -50,7 +50,7 @@ public class AccountService : IAccountService
         return await _signInManager.PasswordSignInAsync(model.Username, model.Password, false, false);
     }
 
-    public async Task<JwtSecurityToken> GetJwtToken(SignInModel model)
+    public async Task<JwtSecurityToken> GenerateJwtToken(SignInModel model)
     {
         var authClaims = new List<Claim>()
         {

@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using web_blog.Context;
 using web_blog.Entities;
+using web_blog.Repository;
 using web_blog.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -77,6 +78,12 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddDbContext<BlogDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("web_blog"))
 );
+
+// For auto mapper
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+// inject repository
+builder.Services.AddScoped<UserRepository>();
 
 builder.Services.AddScoped<IAccountService, AccountService>();
 

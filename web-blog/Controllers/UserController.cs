@@ -1,5 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using web_blog.Entities;
+using web_blog.Models;
+using web_blog.Repository;
+
 // using web_blog.Context;
 // using web_blog.Entities;
 
@@ -10,33 +15,34 @@ namespace web_blog.Controllers;
 [ApiController]
 public class UserController : ControllerBase
 {
-    // private readonly MyDbContext _context;
-    //
-    // public UserController(MyDbContext _context)
-    // {
-    //     this._context = _context;
-    // }
-    //
-    // // GET: api/users
+    
+    private readonly UserRepository _userRepository;
+
+    public UserController(UserRepository userRepository)
+    {
+        _userRepository = userRepository;
+    }
+
+    // GET: api/users
     // [HttpGet]
-    // public async Task<ActionResult<IEnumerable<user>>> Users()
+    // public async Task<ActionResult<IEnumerable<UserModel>>> Users()
     // {
-    //     return await _context.users
-    //         .ToListAsync();
+    //     return _userRepository.GetUserById()
     // }
     //
-    // // GET: api/users/5
-    // // <snippet_GetByID>
-    // [HttpGet("{id}")]
-    // public async Task<ActionResult<user>> GetUserById(int id)
-    // {
-    //     var todoItem = await _context.users.FindAsync(id);
-    //     if (todoItem == null)
-    //     {
-    //         return new NotFoundObjectResult("not found use with id - " + id);
-    //     }
-    //     return todoItem;
-    // }
+    // GET: api/users/5
+    // <snippet_GetByID>
+    [Authorize]
+    [HttpGet("{id}")]
+    public async Task<ActionResult<BlogUser>> GetUserById(int id)
+    {
+        BlogUser user = _userRepository.GetUserById(id);
+        if (user == null)
+        {
+            return new NotFoundObjectResult("not found use with id - " + id);
+        }
+        return user;
+    }
     //
     // // POST: api/users
     // // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
