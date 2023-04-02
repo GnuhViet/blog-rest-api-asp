@@ -1,7 +1,7 @@
 ﻿namespace web_blog.Services;
 
-public class BlogRoles
+public static class BlogRoles
 {
-    public static string Admin = "ADMIN";
-    public static string User = "USER";
+    public static readonly string Admin = "Admin";
+    public static readonly string User = "User";
 }

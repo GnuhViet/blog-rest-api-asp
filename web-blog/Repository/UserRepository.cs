@@ -6,7 +6,7 @@ namespace web_blog.Repository;
 
 public class UserRepository
 {
-    private BlogDbContext _context;
+    private readonly BlogDbContext _context;
 
     public UserRepository(BlogDbContext context)
     {

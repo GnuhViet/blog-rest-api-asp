@@ -1,9 +1,11 @@
+using System.Reflection;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using web_blog.Services;
 
 namespace web_blog.Controllers;
 
-[Authorize(Roles="Admin")]
+[Authorize(Roles= "Admin")]
 [ApiController]
 [Route("[controller]")]
 public class WeatherForecastController : ControllerBase

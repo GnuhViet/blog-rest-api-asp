@@ -8,8 +8,10 @@ public class MappingProfiles : Profile
 {
     public MappingProfiles()
     {
+        // source, des
         CreateMap<BlogUser, UserModel>();
         CreateMap<UserModel, BlogUser>();
         CreateMap<BlogUser, BlogUser>();
+        CreateMap<ArticleModel, Article>();
     }
 }
