@@ -1,4 +1,5 @@
-﻿using web_blog.Context;
+﻿using Microsoft.EntityFrameworkCore;
+using web_blog.Context;
 using web_blog.Entities;
 using web_blog.Models;
 
@@ -12,7 +13,12 @@ public class UserRepository
     {
         _context = context;
     }
-    
+
+    public async Task<List<BlogUser>> GetAll()
+    {
+        return await _context.Users.ToListAsync();
+    }
+
     public BlogUser GetUserById(int id)
     {
         List<BlogUser> users = _context.Users.Where(u => u.BlogUserId == id).ToList();

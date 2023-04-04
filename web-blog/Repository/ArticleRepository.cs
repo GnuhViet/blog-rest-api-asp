@@ -47,4 +47,9 @@ public class ArticleRepository
         _context.Articles.Remove(article);
         _context.SaveChanges();
     }
+
+    public async Task<List<Article>> GetByUserIdAsync(int blogUserId)
+    {
+        return await _context.Articles.Where(a => a.CreateByBlogUserId == blogUserId).ToListAsync();
+    }
 }

@@ -13,8 +13,8 @@ public class ArticleService
         _articleRepository = articleRepository;
         _userRepository = userRepository;
     }
-    
-    public Article Create(string username,Article article)
+
+    public Article Create(string username, Article article)
     {
         var blogUser = _userRepository.GetUserByUserName(username);
         article.CreateByBlogUserId = blogUser.BlogUserId;
@@ -25,6 +25,11 @@ public class ArticleService
     public async Task<List<Article>> GetAll()
     {
         return await _articleRepository.GetAll();
+    }
+
+    public async Task<List<Article>> GetByUserId(int blogUserId)
+    {
+        return await _articleRepository.GetByUserIdAsync(blogUserId);
     }
 
     public Article FindById(int id)

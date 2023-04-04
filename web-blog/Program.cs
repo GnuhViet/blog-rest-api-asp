@@ -85,6 +85,7 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 // inject repository
 builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<ArticleRepository>();
+builder.Services.AddScoped<CategoryRepository>();
 // inject service
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<ArticleService>();

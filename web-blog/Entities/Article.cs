@@ -36,9 +36,11 @@ public partial class Article
     public string? ModifiedLog { get; set; }
 
     public int CreateByBlogUserId { get; set; }
-
+    
+    [JsonIgnore]
     [InverseProperty("Article")]
     public virtual ICollection<Comment> Comments { get; } = new List<Comment>();
 
+    [JsonIgnore]
     public virtual BlogUser CreateByBlogUser { get; set; } = null!;
 }
