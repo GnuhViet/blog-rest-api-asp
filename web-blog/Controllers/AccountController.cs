@@ -17,14 +17,16 @@ namespace web_blog.Controllers;
 public class AccountController : ControllerBase
 {
     private IAccountService _accountService;
+    private ImageService _imageService;
     private UserRepository _userRepository;
     private IMapper _mapper;
 
-    public AccountController(IAccountService accountService, UserRepository userRepository, IMapper mapper)
+    public AccountController(IAccountService accountService, UserRepository userRepository, IMapper mapper, ImageService imageService)
     {
         _accountService = accountService;
         _userRepository = userRepository;
         _mapper = mapper;
+        _imageService = imageService;
     }
 
     [Authorize]
@@ -43,7 +45,7 @@ public class AccountController : ControllerBase
         var modelUser = _mapper.Map<BlogUser, UserModel>(blogUser);
         return Ok(new { user = modelUser });
     }
-    
+
     [Authorize]
     [HttpPut("UserDetails")]
     public async Task<IActionResult> UserDetails(UserModel model)
@@ -54,11 +56,16 @@ public class AccountController : ControllerBase
         {
             return BadRequest();
         }
-        
+
         var oldUser = _userRepository.GetUserByUserName(username);
 
+        if (model.Avatar != null)
+        {
+           string fileName = await _imageService.SaveImageAsync(model.Avatar, username);
+           oldUser.Avatar = "/api/Image/avatar/" + fileName;
+        }
+        
         oldUser.FullName = model.FullName;
-        oldUser.Avatar = model.Avatar;
         oldUser.Email = model.Email;
         oldUser.PhoneNumber = model.PhoneNumber;
 

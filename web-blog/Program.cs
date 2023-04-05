@@ -89,6 +89,7 @@ builder.Services.AddScoped<CategoryRepository>();
 // inject service
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<ArticleService>();
+builder.Services.AddScoped<ImageService>();
 
 builder.Services.AddCors(p => p.AddPolicy("corsPolicy", policy =>
 {
