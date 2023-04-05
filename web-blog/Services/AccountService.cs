@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using web_blog.Entities;
 using web_blog.Models;
+using web_blog.Repository;
 using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
 
 namespace web_blog.Services;
@@ -13,17 +14,40 @@ public class AccountService : IAccountService
 {
     private readonly UserManager<BlogUser> _userManager;
     private readonly SignInManager<BlogUser> _signInManager;
+    private readonly UserRepository _userRepository;
     private RoleManager<IdentityRole> _roleManager;
     private readonly IConfiguration _configuration;
 
-    public AccountService(UserManager<BlogUser> userManager, SignInManager<BlogUser> signInManager,RoleManager<IdentityRole> roleManager, IConfiguration configuration)
+    public AccountService(UserManager<BlogUser> userManager, SignInManager<BlogUser> signInManager,RoleManager<IdentityRole> roleManager, IConfiguration configuration, UserRepository userRepository)
     {
         _userManager = userManager;
         _signInManager = signInManager;
         _roleManager = roleManager;
         _configuration = configuration;
+        _userRepository = userRepository;
     }
-    
+
+    public async Task<bool> SetAdmin(int blogUserId)
+    {
+        BlogUser user = _userRepository.GetUserById(blogUserId);
+
+        if (user == null)
+        {
+            return false;
+        }
+
+        try
+        {
+
+            await _userManager.AddToRoleAsync(user, BlogRoles.Admin);
+        }
+        catch (Exception e)
+        {
+            Console.Write(e.Message);
+        }
+        return true;
+    }
+
     public async Task<IdentityResult> SignUpAsync(SignUpModel model)
     {
         var user = new BlogUser

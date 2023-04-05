@@ -29,6 +29,19 @@ public class AccountController : ControllerBase
         _imageService = imageService;
     }
 
+    [Authorize(Roles = "Admin")]
+    [HttpPut("SetAdmin/{blogUserId}")]
+    public async Task<IActionResult> SetAdmin(int blogUserId)
+    {
+        var res = _accountService.SetAdmin(blogUserId);
+        if (res.Result == false)
+        {
+            return BadRequest();
+        }
+
+        return Ok();
+    }
+
     [Authorize]
     [HttpGet("UserDetails")]
     public async Task<IActionResult> UserDetails()
@@ -61,8 +74,8 @@ public class AccountController : ControllerBase
 
         if (model.Avatar != null)
         {
-           string fileName = await _imageService.SaveImageAsync(model.Avatar, username);
-           oldUser.Avatar = "/api/Image/avatar/" + fileName;
+            string fileName = await _imageService.SaveImageAsync(model.Avatar, username);
+            oldUser.Avatar = "/api/Image/avatar/" + fileName;
         }
         
         oldUser.FullName = model.FullName;
