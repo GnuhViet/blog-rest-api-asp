@@ -45,6 +45,7 @@ public class ArticleController : ControllerBase
     {
         var  username = User.Claims.Where(x => x.Type == ClaimTypes.Name).FirstOrDefault()?.Value;
         Article res = _articleService.Create(username,_mapper.Map<ArticleModel, Article>(article));
+        _articleService.SetCategory(res, article.CategoryIds);
         return Ok(res);
     }
     

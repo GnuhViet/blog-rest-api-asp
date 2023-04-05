@@ -10,7 +10,6 @@ namespace web_blog.Entities;
 [Table("Category")]
 public partial class Category
 {
-    [JsonIgnore]
     [Key]
     public int Id { get; set; }
 

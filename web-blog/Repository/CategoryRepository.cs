@@ -25,6 +25,17 @@ public class CategoryRepository
         return category;
     }
 
+    public void SetCategory(int articleId, List<int> categoryIds)
+    {
+        foreach (var id in categoryIds)
+        {
+            ArticleCategory ac = new ArticleCategory();
+            ac.ArticleId = articleId;
+            ac.CategoryId = id;
+            _context.Database.ExecuteSqlRaw($"INSERT INTO ArticleCategory values ({articleId}, {id})");
+        }
+    }
+
     public Category GetCategoryById(int id)
     {
         List<Category> c = _context.Categories.Where(c => c.Id == id).ToList();

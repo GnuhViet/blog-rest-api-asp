@@ -7,11 +7,18 @@ public class ArticleService
 {
     private readonly ArticleRepository _articleRepository;
     private readonly UserRepository _userRepository;
+    private readonly CategoryRepository _categoryRepository;
 
-    public ArticleService(ArticleRepository articleRepository, UserRepository userRepository)
+    public ArticleService(ArticleRepository articleRepository, UserRepository userRepository, CategoryRepository categoryRepository)
     {
         _articleRepository = articleRepository;
         _userRepository = userRepository;
+        _categoryRepository = categoryRepository;
+    }
+
+    public void SetCategory(Article article, List<int> categoryIds)
+    {
+        _categoryRepository.SetCategory(article.Id, categoryIds);
     }
 
     public Article Create(string username, Article article)
