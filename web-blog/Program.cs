@@ -91,6 +91,18 @@ builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<ArticleService>();
 builder.Services.AddScoped<ImageService>();
 
+// paging
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddSingleton<UriService>(o =>
+{
+    var accessor = o.GetRequiredService<IHttpContextAccessor>();
+    var request = accessor.HttpContext.Request;
+    var uri = string.Concat(request.Scheme, "://", request.Host.ToUriComponent());
+    return new UriService(uri);
+});
+builder.Services.AddControllers();
+
+
 builder.Services.AddCors(p => p.AddPolicy("corsPolicy", policy =>
 {
     policy.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();

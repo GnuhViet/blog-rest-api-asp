@@ -29,6 +29,16 @@ public class ArticleService
         return _articleRepository.Create(article);
     }
 
+    public async Task<int> TotalRecordAsync()
+    {
+        return await _articleRepository.TotalRecordAsync();
+    }
+
+    public async Task<List<Article>> GetPaging(int pageNumber, int pageSize)
+    {
+        return await _articleRepository.GetPaging(pageNumber, pageSize); 
+    }
+
     public async Task<List<Article>> GetAll()
     {
         return await _articleRepository.GetAll();

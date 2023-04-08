@@ -19,6 +19,13 @@ public class ArticleRepository
         _context.SaveChanges();
         return article;
     }
+    
+    public async Task<List<Article>> GetPaging(int pageNumber, int pageSize)
+    {
+        return await _context.Articles.Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+    }
 
     public async Task<List<Article>> GetAll()
     {
@@ -51,5 +58,10 @@ public class ArticleRepository
     public async Task<List<Article>> GetByUserIdAsync(int blogUserId)
     {
         return await _context.Articles.Where(a => a.CreateByBlogUserId == blogUserId).ToListAsync();
+    }
+
+    public async Task<int> TotalRecordAsync()
+    {
+        return await _context.Articles.CountAsync();
     }
 }

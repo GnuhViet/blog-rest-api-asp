@@ -3,6 +3,8 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using web_blog.Entities;
+using web_blog.Filter;
+using web_blog.Helper;
 using web_blog.Models;
 using web_blog.Repository;
 using web_blog.Services;
@@ -16,20 +18,30 @@ public class ArticleController : ControllerBase
 {
     private readonly ArticleService _articleService;
     private readonly IMapper _mapper;
+    private readonly UriService _uriService;
 
-    public ArticleController(ArticleService articleService, IMapper mapper)
+    public ArticleController(ArticleService articleService, IMapper mapper, UriService uriService)
     {
         _articleService = articleService;
         _mapper = mapper;
+        _uriService = uriService;
     }
-    
+
+	[AllowAnonymous]    	
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Article>>> Article()
+    public async Task<ActionResult<IEnumerable<Article>>> Article([FromQuery] PaginationFilter filter)
     {
-        return await _articleService.GetAll();
+        var route = Request.Path.Value;
+        var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
+        var pagedData = await _articleService.GetPaging(validFilter.PageNumber, validFilter.PageSize);
+        var totalRecords = await _articleService.TotalRecordAsync();
+        
+        var pagedReponse = PaginationHelper.CreatePagedReponse<Article>(pagedData, validFilter, totalRecords, _uriService, route);
+        return Ok(pagedReponse);
     }
-    
-    [HttpGet("{id}")]
+
+	[AllowAnonymous]
+	[HttpGet("{id}")]
     public async Task<ActionResult<Article>> Article(int id)
     {
         Article article = _articleService.FindById(id);

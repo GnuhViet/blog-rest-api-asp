@@ -10,4 +10,5 @@ public class ArticleModel
     [Required] public string Thumbnail { get; set; } = null!;
     [Required] public string ShortDescription { get; set; } = null!;
     [Required] public string Content { get; set; } = null!;
+    public DateTime CreateDate { get; set; }
 }
