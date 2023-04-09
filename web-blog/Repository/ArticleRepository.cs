@@ -26,6 +26,15 @@ public class ArticleRepository
             .Take(pageSize)
             .ToListAsync();
     }
+    
+    public async Task<List<Article>> SearchPaging(int pageNumber, int pageSize, string title)
+    {
+        return await _context.Articles
+            .Where(x => x.Title.Contains(title))
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+    }
 
     public async Task<List<Article>> GetAll()
     {

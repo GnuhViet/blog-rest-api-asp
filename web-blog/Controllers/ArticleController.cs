@@ -26,30 +26,48 @@ public class ArticleController : ControllerBase
         _mapper = mapper;
         _uriService = uriService;
     }
-
-	[AllowAnonymous]    	
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<Article>>> Article([FromQuery] PaginationFilter filter)
+    
+    
+    [AllowAnonymous]    	
+    [HttpGet("search/{title}")]
+    public async Task<ActionResult<IEnumerable<ArticleResponseModel>>> Article([FromQuery] PaginationFilter filter, string title)
     {
         var route = Request.Path.Value;
         var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
-        var pagedData = await _articleService.GetPaging(validFilter.PageNumber, validFilter.PageSize);
+        var pagedData = _articleService.GetResponseModel(await _articleService.SearchPaging(validFilter.PageNumber, validFilter.PageSize, title));
         var totalRecords = await _articleService.TotalRecordAsync();
         
-        var pagedReponse = PaginationHelper.CreatePagedReponse<Article>(pagedData, validFilter, totalRecords, _uriService, route);
+        var pagedReponse = PaginationHelper.CreatePagedReponse<ArticleResponseModel>(pagedData, validFilter, totalRecords, _uriService, route);
+        return Ok(pagedReponse);
+    }
+
+	[AllowAnonymous]    	
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<ArticleResponseModel>>> Article([FromQuery] PaginationFilter filter)
+    {
+        var route = Request.Path.Value;
+        var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
+        var pagedData = _articleService.GetResponseModel(await _articleService.GetPaging(validFilter.PageNumber, validFilter.PageSize));
+        var totalRecords = await _articleService.TotalRecordAsync();
+        
+        var pagedReponse = PaginationHelper.CreatePagedReponse<ArticleResponseModel>(pagedData, validFilter, totalRecords, _uriService, route);
         return Ok(pagedReponse);
     }
 
 	[AllowAnonymous]
 	[HttpGet("{id}")]
-    public async Task<ActionResult<Article>> Article(int id)
+    public async Task<ActionResult<ArticleResponseModel>> Article(int id)
     {
         Article article = _articleService.FindById(id);
         if (article == null)
         {
             return new NotFoundObjectResult("not found article with id - " + id);
         }
-        return article;
+
+        List<Article> articles = new List<Article>();
+        articles.Add(article);
+        
+        return _articleService.GetResponseModel(articles)[0];
     }
     
     [HttpPost]

@@ -1,4 +1,6 @@
-﻿using web_blog.Entities;
+﻿using AutoMapper;
+using web_blog.Entities;
+using web_blog.Models;
 using web_blog.Repository;
 
 namespace web_blog.Services;
@@ -8,12 +10,16 @@ public class ArticleService
     private readonly ArticleRepository _articleRepository;
     private readonly UserRepository _userRepository;
     private readonly CategoryRepository _categoryRepository;
+    private readonly ArticleCategoryRepository _articleCategoryRepository;
+    private readonly IMapper _mapper;
 
-    public ArticleService(ArticleRepository articleRepository, UserRepository userRepository, CategoryRepository categoryRepository)
+    public ArticleService(ArticleRepository articleRepository, UserRepository userRepository, CategoryRepository categoryRepository, IMapper mapper, ArticleCategoryRepository articleCategoryRepository)
     {
         _articleRepository = articleRepository;
         _userRepository = userRepository;
         _categoryRepository = categoryRepository;
+        _mapper = mapper;
+        _articleCategoryRepository = articleCategoryRepository;
     }
 
     public void SetCategory(Article article, List<int> categoryIds)
@@ -32,6 +38,28 @@ public class ArticleService
     public async Task<int> TotalRecordAsync()
     {
         return await _articleRepository.TotalRecordAsync();
+    }
+
+    public List<ArticleResponseModel> GetResponseModel(List<Article> articles)
+    {
+        List<ArticleResponseModel> res = new List<ArticleResponseModel>();
+
+        foreach (var a in articles)
+        {
+            var categories = _articleCategoryRepository.GetCategoryList(a.Id);
+            ArticleResponseModel arm = _mapper.Map<Article, ArticleResponseModel>(a);
+
+            List<Category> category = new List<Category>();
+            foreach (var c in categories)
+            {
+                category.Add(_categoryRepository.GetCategoryById(c.CategoryId));
+            }
+            arm.Categories = category;
+            
+            res.Add(arm);
+        }
+        
+        return res; 
     }
 
     public async Task<List<Article>> GetPaging(int pageNumber, int pageSize)
@@ -82,5 +110,10 @@ public class ArticleService
     {
         Article article = _articleRepository.FindById(id);
         _articleRepository.Delete(article);
+    }
+
+    public async Task<List<Article>> SearchPaging(int pageNumber, int pageSize, string title)
+    {
+        return await _articleRepository.SearchPaging(pageNumber, pageSize, title); 
     }
 }
