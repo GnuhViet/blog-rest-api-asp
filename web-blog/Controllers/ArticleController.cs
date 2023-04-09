@@ -26,9 +26,21 @@ public class ArticleController : ControllerBase
         _mapper = mapper;
         _uriService = uriService;
     }
-    
-    
-    [AllowAnonymous]    	
+
+	[AllowAnonymous]
+	[HttpGet("category/{categoryId}")]
+	public async Task<ActionResult<IEnumerable<ArticleResponseModel>>> Article([FromQuery] PaginationFilter filter, int categoryId) {
+		var route = Request.Path.Value;
+		var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
+		var pagedData = _articleService.GetResponseModel(await _articleService.GetByCategoryPaging(validFilter.PageNumber, validFilter.PageSize, categoryId));
+		var totalRecords = await _articleService.TotalRecordAsync();
+
+		var pagedReponse = PaginationHelper.CreatePagedReponse<ArticleResponseModel>(pagedData, validFilter, totalRecords, _uriService, route);
+		return Ok(pagedReponse);
+	}
+
+
+	[AllowAnonymous]    	
     [HttpGet("search/{title}")]
     public async Task<ActionResult<IEnumerable<ArticleResponseModel>>> Article([FromQuery] PaginationFilter filter, string title)
     {

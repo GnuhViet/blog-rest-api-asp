@@ -67,7 +67,11 @@ public class ArticleService
         return await _articleRepository.GetPaging(pageNumber, pageSize); 
     }
 
-    public async Task<List<Article>> GetAll()
+	public async Task<List<Article>> GetByCategoryPaging(int pageNumber, int pageSize, int categoryId) {
+		return await _articleRepository.GetByCategoryPaging(pageNumber, pageSize, categoryId);
+	}
+
+	public async Task<List<Article>> GetAll()
     {
         return await _articleRepository.GetAll();
     }

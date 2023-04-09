@@ -36,7 +36,15 @@ public class ArticleRepository
             .ToListAsync();
     }
 
-    public async Task<List<Article>> GetAll()
+	public async Task<List<Article>> GetByCategoryPaging(int pageNumber, int pageSize, int categoryId) {
+		return await _context.Articles
+			.Join(_context.ArticleCategories, a => a.Id, ac => ac.ArticleId, (a, ac) => new { Article = a, ArticleCategory = ac })
+			.Where(ac => ac.ArticleCategory.CategoryId == categoryId)
+			.Select(ac => ac.Article)
+			.ToListAsync();
+	}
+
+	public async Task<List<Article>> GetAll()
     {
         return await _context.Articles.ToListAsync();
     }
