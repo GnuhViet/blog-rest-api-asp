@@ -32,11 +32,9 @@ public class ArticleController : ControllerBase
 	public async Task<ActionResult<IEnumerable<ArticleResponseModel>>> Article([FromQuery] PaginationFilter filter, int categoryId) {
 		var route = Request.Path.Value;
 		var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
-		var pagedData = _articleService.GetResponseModel(await _articleService.GetByCategoryPaging(validFilter.PageNumber, validFilter.PageSize, categoryId));
-		var totalRecords = await _articleService.TotalRecordAsync();
-
-		var pagedReponse = PaginationHelper.CreatePagedReponse<ArticleResponseModel>(pagedData, validFilter, totalRecords, _uriService, route);
-		return Ok(pagedReponse);
+		var list = await _articleService.GetByCategoryPaging(validFilter.PageNumber, validFilter.PageSize, categoryId);
+        
+        return Ok(CreatePagingResponse(validFilter, list, route).Result);
 	}
 
 
@@ -46,11 +44,9 @@ public class ArticleController : ControllerBase
     {
         var route = Request.Path.Value;
         var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
-        var pagedData = _articleService.GetResponseModel(await _articleService.SearchPaging(validFilter.PageNumber, validFilter.PageSize, title));
-        var totalRecords = await _articleService.TotalRecordAsync();
+        var list = await _articleService.SearchPaging(validFilter.PageNumber, validFilter.PageSize, title);
         
-        var pagedReponse = PaginationHelper.CreatePagedReponse<ArticleResponseModel>(pagedData, validFilter, totalRecords, _uriService, route);
-        return Ok(pagedReponse);
+        return Ok(CreatePagingResponse(validFilter, list, route).Result);
     }
 
 	[AllowAnonymous]    	
@@ -59,11 +55,27 @@ public class ArticleController : ControllerBase
     {
         var route = Request.Path.Value;
         var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
-        var pagedData = _articleService.GetResponseModel(await _articleService.GetPaging(validFilter.PageNumber, validFilter.PageSize));
-        var totalRecords = await _articleService.TotalRecordAsync();
+        var list = await _articleService.GetPaging(validFilter.PageNumber, validFilter.PageSize);
         
-        var pagedReponse = PaginationHelper.CreatePagedReponse<ArticleResponseModel>(pagedData, validFilter, totalRecords, _uriService, route);
-        return Ok(pagedReponse);
+        return Ok(CreatePagingResponse(validFilter, list, route).Result);
+    }
+    
+    [HttpGet("manage")]
+    public async Task<ActionResult<IEnumerable<ArticleResponseModel>>> ArticleManage([FromQuery] PaginationFilter filter)
+    {
+        var username = User.Claims.Where(x => x.Type == ClaimTypes.Name).FirstOrDefault()?.Value;
+        var route = Request.Path.Value;
+        var validFilter = new PaginationFilter(filter.PageNumber, filter.PageSize);
+        var list = await _articleService.GetByUserNamePaging(validFilter.PageNumber, validFilter.PageSize, username);
+        
+        return Ok(CreatePagingResponse(validFilter, list, route).Result);
+    }
+
+    private async Task<PagedResponse<List<ArticleResponseModel>>> CreatePagingResponse(PaginationFilter validFilter, List<Article> result, string? route)
+    {
+        var pagedData = _articleService.GetResponseModel(result);
+        var totalRecords = await _articleService.TotalRecordAsync();
+        return PaginationHelper.CreatePagedReponse<ArticleResponseModel>(pagedData, validFilter, totalRecords, _uriService, route);
     }
 
 	[AllowAnonymous]
@@ -81,18 +93,18 @@ public class ArticleController : ControllerBase
         
         return _articleService.GetResponseModel(articles)[0];
     }
-    
+
     [HttpPost]
-    public async Task<ActionResult<Article>> Article(ArticleModel article)
+    public async Task<ActionResult<Article>> Article(ArticleRequestModel articleRequest)
     {
-        var  username = User.Claims.Where(x => x.Type == ClaimTypes.Name).FirstOrDefault()?.Value;
-        Article res = _articleService.Create(username,_mapper.Map<ArticleModel, Article>(article));
-        _articleService.SetCategory(res, article.CategoryIds);
+        var username = User.Claims.Where(x => x.Type == ClaimTypes.Name).FirstOrDefault()?.Value;
+        Article res = _articleService.Create(username,_mapper.Map<ArticleRequestModel, Article>(articleRequest));
+        _articleService.SetCategory(res, articleRequest.CategoryIds);
         return Ok(res);
     }
     
     [HttpPut("{id}")]
-    public async Task<IActionResult> Article(int id, ArticleModel article)
+    public async Task<IActionResult> Article(int id, ArticleRequestModel articleRequest)
     {
         IActionResult authorizeRes = AuthorizeUser(id);
         if (authorizeRes != null)
@@ -100,8 +112,8 @@ public class ArticleController : ControllerBase
             return authorizeRes;
         }
 
-        Article res =_articleService.Update(_mapper.Map<ArticleModel, Article>(article));
-        
+        Article res =_articleService.Update(_mapper.Map<ArticleRequestModel, Article>(articleRequest));
+        _articleService.SetCategory(res, articleRequest.CategoryIds);
         return Ok(res);
     }
     

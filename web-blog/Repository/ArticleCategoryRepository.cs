@@ -1,4 +1,5 @@
-﻿using web_blog.Context;
+﻿using Microsoft.EntityFrameworkCore;
+using web_blog.Context;
 using web_blog.Entities;
 
 namespace web_blog.Repository;
@@ -15,5 +16,10 @@ public class ArticleCategoryRepository
     public List<ArticleCategory> GetCategoryList(int articleId)
     {
         return _context.ArticleCategories.Where(x => x.ArticleId == articleId).ToList();
+    }
+    
+    public void DeleteArticleCategory(int articleId)
+    {
+        _context.Database.ExecuteSqlRaw($"DELETE FROM ArticleCategory WHERE ArticleId = {articleId}"); 
     }
 }

@@ -12,7 +12,7 @@ public class MappingProfiles : Profile
         CreateMap<BlogUser, UserModel>();
         CreateMap<UserModel, BlogUser>();
         CreateMap<BlogUser, BlogUser>();
-        CreateMap<ArticleModel, Article>();
+        CreateMap<ArticleRequestModel, Article>();
         CreateMap<Article, ArticleResponseModel>();
     }
 }

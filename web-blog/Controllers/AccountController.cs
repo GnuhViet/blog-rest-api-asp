@@ -72,10 +72,13 @@ public class AccountController : ControllerBase
 
         var oldUser = _userRepository.GetUserByUserName(username);
 
+		
         if (model.Avatar != null)
         {
-            string fileName = await _imageService.SaveImageAsync(model.Avatar, username);
-            oldUser.Avatar = "/api/Image/avatar/" + fileName;
+			if (!model.Avatar.StartsWith("/api/Image/avatar/")) {
+				string fileName = await _imageService.SaveImageAsync(model.Avatar, username);
+				oldUser.Avatar = "/api/Image/avatar/" + fileName;
+			}
         }
         
         oldUser.FullName = model.FullName;

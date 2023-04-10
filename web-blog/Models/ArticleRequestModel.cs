@@ -2,7 +2,7 @@
 
 namespace web_blog.Models;
 
-public class ArticleModel
+public class ArticleRequestModel
 {
     public int ? Id { get; set; }
     [Required] public List<int> CategoryIds { get; set; } = null!;

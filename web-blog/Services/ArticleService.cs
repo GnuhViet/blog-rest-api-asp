@@ -24,6 +24,7 @@ public class ArticleService
 
     public void SetCategory(Article article, List<int> categoryIds)
     {
+        _articleCategoryRepository.DeleteArticleCategory(article.Id);
         _categoryRepository.SetCategory(article.Id, categoryIds);
     }
 
@@ -31,7 +32,7 @@ public class ArticleService
     {
         var blogUser = _userRepository.GetUserByUserName(username);
         article.CreateByBlogUserId = blogUser.BlogUserId;
-        article.CreateDate = DateTime.Now;
+        article.CreateDate = DateTime.Now.Date;
         return _articleRepository.Create(article);
     }
 
@@ -55,7 +56,7 @@ public class ArticleService
                 category.Add(_categoryRepository.GetCategoryById(c.CategoryId));
             }
             arm.Categories = category;
-            
+            arm.AuthorName = _userRepository.GetUserById(a.CreateByBlogUserId).FullName;
             res.Add(arm);
         }
         
@@ -65,6 +66,17 @@ public class ArticleService
     public async Task<List<Article>> GetPaging(int pageNumber, int pageSize)
     {
         return await _articleRepository.GetPaging(pageNumber, pageSize); 
+    }
+    
+    public async Task<List<Article>> GetByUserNamePaging(int pageNumber, int pageSize, string username)
+    {
+        BlogUser user = _userRepository.GetUserByUserName(username);
+        if (user == null)
+        {
+            return null;
+        }
+        
+        return await _articleRepository.GetByUserIdPaging(pageNumber, pageSize, user.BlogUserId); 
     }
 
 	public async Task<List<Article>> GetByCategoryPaging(int pageNumber, int pageSize, int categoryId) {
@@ -94,7 +106,7 @@ public class ArticleService
         old.Content = article.Content;
         old.ShortDescription = article.ShortDescription;
         old.Thumbnail = article.Thumbnail;
-        old.ModifiedDate = DateTime.Now;
+        old.ModifiedDate = DateTime.Now.Date;
 
         return _articleRepository.Update(old);
     }
@@ -113,6 +125,7 @@ public class ArticleService
     public void Delete(int id)
     {
         Article article = _articleRepository.FindById(id);
+        _articleCategoryRepository.DeleteArticleCategory(id);
         _articleRepository.Delete(article);
     }
 

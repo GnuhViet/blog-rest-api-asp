@@ -27,6 +27,15 @@ public class ArticleRepository
             .ToListAsync();
     }
     
+    public async Task<List<Article>> GetByUserIdPaging(int pageNumber, int pageSize, int blogUserId)
+    {
+        return await _context.Articles
+            .Where(x => x.CreateByBlogUserId == blogUserId)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
+    }
+    
     public async Task<List<Article>> SearchPaging(int pageNumber, int pageSize, string title)
     {
         return await _context.Articles
