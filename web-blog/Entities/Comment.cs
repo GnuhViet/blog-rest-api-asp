@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 
 namespace web_blog.Entities;
@@ -27,9 +28,10 @@ public partial class Comment
 
     public int ArticleId { get; set; }
 
+    [JsonIgnore]
     [ForeignKey("ArticleId")]
     [InverseProperty("Comments")]
     public virtual Article Article { get; set; } = null!;
-
+    [JsonIgnore]
     public virtual BlogUser CreateByBlogUser { get; set; } = null!;
 }

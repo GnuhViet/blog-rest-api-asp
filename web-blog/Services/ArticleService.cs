@@ -88,9 +88,9 @@ public class ArticleService
         return await _articleRepository.GetAll();
     }
 
-    public async Task<List<Article>> GetByUserId(int blogUserId)
+    public async Task<List<Article>> GetByUserIdPaging(int pageNumber, int pageSize, int blogUserId)
     {
-        return await _articleRepository.GetByUserIdAsync(blogUserId);
+        return await _articleRepository.GetByUserIdPaging(pageNumber, pageSize, blogUserId);
     }
 
     public Article FindById(int id)
