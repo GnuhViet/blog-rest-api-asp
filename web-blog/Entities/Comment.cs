@@ -18,9 +18,11 @@ public partial class Comment
     [Column(TypeName = "date")]
     public DateTime? CreateDate { get; set; }
 
+    [JsonIgnore]
     [Column(TypeName = "date")]
     public DateTime? ModifiedDate { get; set; }
 
+    [JsonIgnore]
     [Unicode(false)]
     public string? ModifiedLog { get; set; }
 
@@ -32,6 +34,5 @@ public partial class Comment
     [ForeignKey("ArticleId")]
     [InverseProperty("Comments")]
     public virtual Article Article { get; set; } = null!;
-    [JsonIgnore]
     public virtual BlogUser CreateByBlogUser { get; set; } = null!;
 }

@@ -12,7 +12,18 @@ public class CommentRepository
     {
         _context = context;
     }
-    
+
+    public void Create(Comment cmt)
+    {
+        _context.Comments.Add(cmt);
+        _context.SaveChanges();
+    }
+
+    public async Task<List<Comment>> GetByArticle(int articleId)
+    {
+        return await _context.Comments.Where(x => x.ArticleId == articleId).ToListAsync();
+    }
+
     public async Task<List<Comment>> GetByUserIdPaging(int pageNumber, int pageSize, int blogUserId)
     {
         return await _context.Comments

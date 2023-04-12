@@ -14,5 +14,8 @@ public class MappingProfiles : Profile
         CreateMap<BlogUser, BlogUser>();
         CreateMap<ArticleRequestModel, Article>();
         CreateMap<Article, ArticleResponseModel>();
+        
+        CreateMap<CommentModel, Comment>();
+        CreateMap<Comment, CommentModel>();
     }
 }
