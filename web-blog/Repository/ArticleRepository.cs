@@ -50,7 +50,9 @@ public class ArticleRepository
 			.Join(_context.ArticleCategories, a => a.Id, ac => ac.ArticleId, (a, ac) => new { Article = a, ArticleCategory = ac })
 			.Where(ac => ac.ArticleCategory.CategoryId == categoryId)
 			.Select(ac => ac.Article)
-			.ToListAsync();
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
 	}
 
 	public async Task<List<Article>> GetAll()
