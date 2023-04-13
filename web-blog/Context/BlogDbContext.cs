@@ -46,6 +46,10 @@ public partial class BlogDbContext : IdentityDbContext<BlogUser>
                 .HasForeignKey(d => d.CreateByBlogUserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_user_create_article");
+            
+            entity.Property(e => e.Title).HasColumnType("nvarchar(max)"); 
+            entity.Property(e => e.ShortDescription).HasColumnType("nvarchar(max)"); 
+            entity.Property(e => e.Content).HasColumnType("nvarchar(max)"); 
         });
 
         modelBuilder.Entity<ArticleCategory>(entity =>
@@ -64,6 +68,7 @@ public partial class BlogDbContext : IdentityDbContext<BlogUser>
             // entity.HasKey(e => e.Id).HasName("PK__BlogUser__3214EC07958E85BC");
 
             entity.Property(e => e.BlogUserId).ValueGeneratedOnAdd();
+            entity.Property(e => e.FullName).HasColumnType("nvarchar(max)"); 
         });
 
         modelBuilder.Entity<Category>(entity =>
@@ -84,6 +89,7 @@ public partial class BlogDbContext : IdentityDbContext<BlogUser>
                 .HasForeignKey(d => d.CreateByBlogUserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_comments_user");
+            entity.Property(e => e.Content).HasColumnType("nvarchar(max)"); 
         });
 
         OnModelCreatingPartial(modelBuilder);

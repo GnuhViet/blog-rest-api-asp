@@ -11,15 +11,17 @@ public class ArticleService
     private readonly UserRepository _userRepository;
     private readonly CategoryRepository _categoryRepository;
     private readonly ArticleCategoryRepository _articleCategoryRepository;
+    private readonly CommentRepository _commentRepository;
     private readonly IMapper _mapper;
 
-    public ArticleService(ArticleRepository articleRepository, UserRepository userRepository, CategoryRepository categoryRepository, IMapper mapper, ArticleCategoryRepository articleCategoryRepository)
+    public ArticleService(ArticleRepository articleRepository, UserRepository userRepository, CategoryRepository categoryRepository, IMapper mapper, ArticleCategoryRepository articleCategoryRepository, CommentRepository commentRepository)
     {
         _articleRepository = articleRepository;
         _userRepository = userRepository;
         _categoryRepository = categoryRepository;
         _mapper = mapper;
         _articleCategoryRepository = articleCategoryRepository;
+        _commentRepository = commentRepository;
     }
 
     public void SetCategory(Article article, List<int> categoryIds)
@@ -126,6 +128,7 @@ public class ArticleService
     {
         Article article = _articleRepository.FindById(id);
         _articleCategoryRepository.DeleteArticleCategory(id);
+        _commentRepository.DeleteByArticleId(id);
         _articleRepository.Delete(article);
     }
 

@@ -19,6 +19,13 @@ public class CommentRepository
         _context.SaveChanges();
     }
 
+    public void DeleteByArticleId(int articleId)
+    {
+        var cmts = _context.Comments.Where(x => x.ArticleId == articleId);
+        _context.Comments.RemoveRange(cmts);
+        _context.SaveChanges();
+    }
+
     public async Task<List<Comment>> GetByArticle(int articleId)
     {
         return await _context.Comments.Where(x => x.ArticleId == articleId).ToListAsync();
