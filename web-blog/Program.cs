@@ -75,9 +75,17 @@ builder.Services.AddAuthentication(options =>
 });
 
 // For entity framework
-builder.Services.AddDbContext<BlogDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("web_blog"))
+var dbHost = Environment.GetEnvironmentVariable("DB_HOST");
+var dbPort = Environment.GetEnvironmentVariable("DB_PORT");
+var dbName = Environment.GetEnvironmentVariable("DB_NAME");
+var dbPassword = Environment.GetEnvironmentVariable("DB_SA_PASSWORD");
+var connectionString = 
+    $"Server={dbHost},{dbPort};Initial Catalog={dbName};User ID=sa;Password={dbPassword};Trusted_Connection=False;MultipleActiveResultSets=True;Encrypt=False;TrustServerCertificate=False";
+// var connectionString = $"Data Source={dbHost};Initial Catalog={dbName};MultipleActiveResultSets=true;Encrypt=False;TrustServerCertificate=False;User ID=sa;Password={dbPassword}";
+builder.Services.AddDbContext<BlogDbContext>(options => 
+    options.UseSqlServer(connectionString)
 );
+Console.Write("cs:" + connectionString);
 
 // For auto mapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -121,7 +129,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("corsPolicy");
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 
 app.UseAuthentication();
 
@@ -129,4 +137,15 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.Run();
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+
+    var context = services.GetRequiredService<BlogDbContext>();
+    if (context.Database.GetPendingMigrations().Any())
+    {
+        context.Database.EnsureCreated();
+    }
+}
+
+app.Run(builder.Configuration["AppURL:URL"]);

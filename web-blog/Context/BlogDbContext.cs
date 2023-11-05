@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage;
 using web_blog.Entities;
 
 namespace web_blog.Context;
@@ -16,6 +18,19 @@ public partial class BlogDbContext : IdentityDbContext<BlogUser>
     public BlogDbContext(DbContextOptions<BlogDbContext> options)
         : base(options)
     {
+        // try
+        // {
+        //     var databaseCreator = Database.GetService<IDatabaseCreator>() as RelationalDatabaseCreator;
+        //     if (databaseCreator != null)
+        //     {
+        //         if (!databaseCreator.CanConnect()) databaseCreator.Create();
+        //         if (!databaseCreator.HasTables()) databaseCreator.CreateTables();
+        //     }
+        // }
+        // catch (Exception ex)
+        // {
+        //     Console.WriteLine(ex.Message);
+        // }
     }
 
     public virtual DbSet<Article> Articles { get; set; }

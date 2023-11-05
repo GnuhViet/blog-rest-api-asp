@@ -1,0 +1,38 @@
+﻿version: "3.4"
+
+networks:
+  netcoreapp:
+
+services:
+  msdatabase:
+    container_name: msdatabase
+    image: "mcr.microsoft.com/mssql/server:2019-latest"
+    ports:
+      - "14349:1433"
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "r00t.ROOT"
+      MSSQL_PID: Express
+    networks:
+      - netcoreapp
+  aspapi:
+    container_name: aspapi
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "7185:80"
+      #      - "7186:443"
+    depends_on:
+      - msdatabase
+    environment:
+      #      ASPNETCORE_URLS: "https://+;http://+"
+      #      ASPNETCORE_HTTPS_PORT: "7185"
+      #      ASPNETCORE_ENVIRONMENT: "Development"
+      DB_HOST: "msdatabase"
+      DB_PORT: "1433"
+      DB_NAME: "web-blog-asp-api"
+      DB_SA_PASSWORD: "r00t.ROOT"
+    networks:
+      - netcoreapp
+    restart: on-failure
