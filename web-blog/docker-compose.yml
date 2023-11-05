@@ -21,14 +21,10 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "7185:80"
-      #      - "7186:443"
+      - "5000:5000"
     depends_on:
       - msdatabase
     environment:
-      #      ASPNETCORE_URLS: "https://+;http://+"
-      #      ASPNETCORE_HTTPS_PORT: "7185"
-      #      ASPNETCORE_ENVIRONMENT: "Development"
       DB_HOST: "msdatabase"
       DB_PORT: "1433"
       DB_NAME: "web-blog-asp-api"

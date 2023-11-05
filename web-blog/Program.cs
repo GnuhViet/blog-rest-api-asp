@@ -85,7 +85,6 @@ var connectionString =
 builder.Services.AddDbContext<BlogDbContext>(options => 
     options.UseSqlServer(connectionString)
 );
-Console.Write("cs:" + connectionString);
 
 // For auto mapper
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -121,11 +120,8 @@ builder.Services.AddCors(p => p.AddPolicy("corsPolicy", policy =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseCors("corsPolicy");
 

@@ -5,7 +5,6 @@ using web_blog.Services;
 
 namespace web_blog.Controllers;
 
-[Authorize(Roles= "Admin")]
 [ApiController]
 [Route("[controller]")]
 public class WeatherForecastController : ControllerBase

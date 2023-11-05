@@ -1,24 +1,24 @@
-﻿FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
+﻿FROM mcr.microsoft.com/dotnet/aspnet:6.0-focal AS base
 WORKDIR /app
-EXPOSE 80
-#EXPOSE 443
+EXPOSE 5000
 
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+ENV ASPNETCORE_URLS=http://+:5000
+
+RUN adduser -u 5678 --disabled-password --gecos "" appuser && chown -R appuser /app
+USER appuser
+
+FROM mcr.microsoft.com/dotnet/sdk:6.0-focal AS build
 WORKDIR /src
-COPY ["web-blog.csproj", "web-blog/"]
-RUN dotnet restore "web-blog/web-blog.csproj"
-
-WORKDIR "/src/web-blog"
+COPY ["web-blog.csproj", "./"]
+RUN dotnet restore "web-blog.csproj"
 COPY . .
-
-#RUN dotnet dev-certs https
+WORKDIR "/src/."
 RUN dotnet build "web-blog.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "web-blog.csproj" -c Release -o /app/publish
+RUN dotnet publish "web-blog.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
-#COPY --from=build /root/.dotnet/corefx/cryptography/x509stores/my/* /root/.dotnet/corefx/cryptography/x509stores/my/
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "web-blog.dll"]

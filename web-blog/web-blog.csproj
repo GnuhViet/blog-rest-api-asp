@@ -28,6 +28,10 @@
     </ItemGroup>
 
     <ItemGroup>
+      <None Remove="docker-compose.yml" />
+    </ItemGroup>
+
+    <ItemGroup>
       <Content Include="..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
