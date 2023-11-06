@@ -7,6 +7,8 @@ namespace web_blog.Services;
 
 public class ImageService
 {
+	public const String avatarUploadPath = "/app/uploads";
+	
     public async Task<string> SaveImageAsync(string base64String, string username)
     {
         if (string.IsNullOrEmpty(base64String))
@@ -22,7 +24,7 @@ public class ImageService
         
         var fileName = username + "." + format;
 
-        var filePath = Path.Combine("E:\\FileUpload\\Avatar", fileName);
+        var filePath = Path.Combine(avatarUploadPath, fileName);
         await File.WriteAllBytesAsync(filePath, bytes);
 
         return fileName;
@@ -30,7 +32,7 @@ public class ImageService
 
 	public async Task<FileContentResult> GetImageAsync(string filename) {
 		// Kiểm tra file có tồn tại trên ổ đĩa hay không
-		var filePath = Path.Combine("E:\\FileUpload\\Avatar", filename);
+		var filePath = Path.Combine(avatarUploadPath, filename);
 		if (!System.IO.File.Exists(filePath)) {
 			return null;
 		}

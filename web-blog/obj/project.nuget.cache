@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "KzN8lsBvZSAVCdestw0X0vdcpFvTFFaJgif+HHtDHUOMmf9bmulqz2NNcrv815poHr2ncV2rv1xWyzUy2266bQ==",
+  "dgSpecHash": "ARnpgWSVsfhm7CayvHV4QFjCAAAX9UyWBaPeJG4pGhaqi/S9Eu38UUV4qyS2f4bgw9GacKHksSPux+R2qvOgUw==",
   "success": true,
-  "projectFilePath": "E:\\ASPNetWorkSpace\\web-blog\\web-blog\\web-blog.csproj",
+  "projectFilePath": "E:\\docker-demo\\web-blog-app\\blog-rest-api-asp\\web-blog\\web-blog.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\nvh20\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
     "C:\\Users\\nvh20\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.0\\automapper.extensions.microsoft.dependencyinjection.12.0.0.nupkg.sha512",

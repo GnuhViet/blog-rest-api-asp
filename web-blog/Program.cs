@@ -144,4 +144,6 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
+app.Seed();
+
 app.Run(builder.Configuration["AppURL:URL"]);

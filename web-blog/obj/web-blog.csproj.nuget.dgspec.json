@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "E:\\ASPNetWorkSpace\\web-blog\\web-blog\\web-blog.csproj": {}
+    "E:\\docker-demo\\web-blog-app\\blog-rest-api-asp\\web-blog\\web-blog.csproj": {}
   },
   "projects": {
-    "E:\\ASPNetWorkSpace\\web-blog\\web-blog\\web-blog.csproj": {
+    "E:\\docker-demo\\web-blog-app\\blog-rest-api-asp\\web-blog\\web-blog.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\ASPNetWorkSpace\\web-blog\\web-blog\\web-blog.csproj",
+        "projectUniqueName": "E:\\docker-demo\\web-blog-app\\blog-rest-api-asp\\web-blog\\web-blog.csproj",
         "projectName": "web-blog",
-        "projectPath": "E:\\ASPNetWorkSpace\\web-blog\\web-blog\\web-blog.csproj",
+        "projectPath": "E:\\docker-demo\\web-blog-app\\blog-rest-api-asp\\web-blog\\web-blog.csproj",
         "packagesPath": "C:\\Users\\nvh20\\.nuget\\packages\\",
-        "outputPath": "E:\\ASPNetWorkSpace\\web-blog\\web-blog\\obj\\",
+        "outputPath": "E:\\docker-demo\\web-blog-app\\blog-rest-api-asp\\web-blog\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\nvh20\\AppData\\Roaming\\NuGet\\NuGet.Config"

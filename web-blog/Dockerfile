@@ -9,9 +9,10 @@ USER appuser
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0-focal AS build
 WORKDIR /src
-COPY ["web-blog.csproj", "./"]
+COPY ./blog-rest-api-asp/web-blog/web-blog.csproj ./
 RUN dotnet restore "web-blog.csproj"
-COPY . .
+
+COPY ./blog-rest-api-asp/web-blog/ ./
 WORKDIR "/src/."
 RUN dotnet build "web-blog.csproj" -c Release -o /app/build
 
@@ -21,4 +22,7 @@ RUN dotnet publish "web-blog.csproj" -c Release -o /app/publish /p:UseAppHost=fa
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+
+RUN mkdir /app/uploads
+
 ENTRYPOINT ["dotnet","web-blog.dll","--server.urls","https://+:7185"]

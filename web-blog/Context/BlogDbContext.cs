@@ -38,6 +38,9 @@ public partial class BlogDbContext : IdentityDbContext<BlogUser>
     {
         base.OnModelCreating(modelBuilder);
         this.SeedRoles(modelBuilder);
+        this.SeedCategory(modelBuilder);
+        this.SeedAdminUser(modelBuilder);
+        this.SeedArticle(modelBuilder);
         
         modelBuilder.Entity<Article>(entity =>
         {
@@ -101,9 +104,49 @@ public partial class BlogDbContext : IdentityDbContext<BlogUser>
 
     private void SeedRoles(ModelBuilder builder)
     {
-        builder.Entity<IdentityRole>().HasData(
-            new IdentityRole() { Name = "Admin", ConcurrencyStamp = "1", NormalizedName = "Admin" },
-            new IdentityRole() { Name = "User", ConcurrencyStamp = "2", NormalizedName = "User" }
+        builder.Entity<IdentityRole>().HasData(DbSeeds.s_role);
+    }
+
+    private void SeedCategory(ModelBuilder builder)
+    {
+        builder.Entity<Category>().HasData(DbSeeds.s_category);
+    }
+
+    private void SeedAdminUser(ModelBuilder builder)
+    {
+        String adminId = Guid.NewGuid().ToString();
+        
+        var hasher = new PasswordHasher<BlogUser>();
+        builder.Entity<BlogUser>().HasData(new BlogUser
+        {
+            Id = adminId,
+            BlogUserId = -1,
+            UserName = "admin",
+            FullName = "Admin Nguyen",
+            NormalizedUserName = "admin",
+            Email = "admin@admin.fake",
+            NormalizedEmail = "admin@admin.fake",
+            EmailConfirmed = true,
+            PasswordHash = hasher.HashPassword(null, "Admin123@"),
+            SecurityStamp = string.Empty
+        });
+        
+        builder.Entity<IdentityUserRole<string>>().HasData(
+            new IdentityUserRole<string>
+            {
+                RoleId = DbSeeds.s_role[0].Id, 
+                UserId = adminId
+            }, 
+            new IdentityUserRole<string>
+            {
+                RoleId = DbSeeds.s_role[1].Id, 
+                UserId = adminId
+            }
         );
+    }
+    
+    private void SeedArticle(ModelBuilder builder)
+    {
+        builder.Entity<Article>().HasData(DbSeeds.s_article);
     }
 }
