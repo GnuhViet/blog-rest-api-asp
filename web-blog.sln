@@ -1,5 +1,4 @@
 ﻿
-
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "web-blog", "web-blog\web-blog.csproj", "{994BD2D6-741C-49AC-963F-B7A8CC600F86}"
 EndProject
